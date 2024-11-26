@@ -1,5 +1,1 @@
 Auth Provider
-
-PARENT PROJECT
-
-run ONLY WITH ROOT PROJECT
