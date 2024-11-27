@@ -1,1 +1,1 @@
-rootProject.name = "ts-backend-common"
+rootProject.name = "ts-auth-provider"

@@ -37,6 +37,6 @@ exposed-JDBC = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "e
 
 lombok = { module = "org.projectlombok:lombok" }
 
-jjwt = { module = "io.jsonwebtoken:jjwt", version.ref = "jjwt" }
+jjwt = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
 
 postgresqlDriver = { module = "org.postgresql:postgresql" }
