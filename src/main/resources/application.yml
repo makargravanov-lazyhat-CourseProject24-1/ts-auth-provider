@@ -3,4 +3,4 @@ spring:
     name: ts-auth-provider
 
 server:
-  port: 8080
+  port: ${HTTP_PORT}
