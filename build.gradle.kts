@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.spring.boot)
     alias(libs.plugins.spring.dependencyManagement)
 }
+val springCloudVersion by extra("2024.0.0-RC1")
 
 repositories {
     mavenCentral()
@@ -19,10 +20,17 @@ dependencies {
     implementation(libs.spring.boot.security)
     implementation(libs.spring.boot.securityTest)
     implementation(libs.jjwt)
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 }
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
     }
 }

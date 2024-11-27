@@ -3,32 +3,44 @@ package ru.jetlabs.ts.authprovider.v1.api;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.jetlabs.ts.authprovider.client.UserFindForm;
+import ru.jetlabs.ts.authprovider.client.UserResponseForm;
+import ru.jetlabs.ts.authprovider.client.UserServiceClient;
 import ru.jetlabs.ts.authprovider.dto.LoginRequest;
-import ru.jetlabs.ts.authprovider.dto.Message;
 import ru.jetlabs.ts.authprovider.dto.TokenResponse;
 import ru.jetlabs.ts.authprovider.service.JwtService;
 import ru.jetlabs.ts.authprovider.v1.LoginContractV1;
 
-import java.util.Optional;
+import java.util.Objects;
 
-@AllArgsConstructor
-@RestController("/api/v1")
+@RestController
+@RequestMapping("/ts-auth-provider/api/v1")
 public class LoginControllerV1 implements LoginContractV1 {
     private final JwtService jwtService;
+    private final UserServiceClient userServiceClient;
+
+    public LoginControllerV1(JwtService jwtService, UserServiceClient userServiceClient) {
+        this.jwtService = jwtService;
+        this.userServiceClient = userServiceClient;
+    }
+
     @Override
     @PostMapping("/login")
-    public ResponseEntity<Message<Optional<TokenResponse>>> login(LoginRequest loginRequest) {
-        /**
-         *  1) Обращение на ts-user-service с попыткой залогиниться
-         *      1.1)Ожидаемый ответ - статус 200 и Message с payload:
-         *                                  {
-         *                                      "id" = Long,
-         *                                      "emailConfirmed" = boolean
-         *                                   }
-         *  2) Всё ок - значит выдаём токен, id, статус по подтверждению почты
-         *      2.1) Не ок - действуем по ситуации
-         */
-        return null;
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        ResponseEntity<UserResponseForm> response =
+                userServiceClient.getByEmailAndPassword(new UserFindForm(loginRequest.email()
+                ,loginRequest.password()));
+        if (response.getStatusCode().is2xxSuccessful()){
+            return ResponseEntity.ok(new TokenResponse(
+                    jwtService.generateToken(Objects.requireNonNull(response.getBody()).id()),
+                    response.getBody().id(),
+                    response.getBody().emailVerified()
+            ));
+        } else {
+            return response;
+        }
     }
 }

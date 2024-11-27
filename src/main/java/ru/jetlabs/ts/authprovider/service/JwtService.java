@@ -35,7 +35,7 @@ public class JwtService {
         return new BigInteger(1, bytes).toString(16);
     }
 
-    public String generateToken(int userId) {
+    public String generateToken(Long userId) {
         return Jwts.builder()
                 .setSubject(String.valueOf(userId))
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
@@ -43,12 +43,12 @@ public class JwtService {
                 .compact();
     }
 
-    public int validateToken(String token) {
+    public Long validateToken(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        return Integer.parseInt(claims.getSubject());
+        return Long.parseLong(claims.getSubject());
     }
 }
