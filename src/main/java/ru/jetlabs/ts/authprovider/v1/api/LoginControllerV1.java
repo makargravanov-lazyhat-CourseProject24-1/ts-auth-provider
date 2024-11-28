@@ -1,5 +1,6 @@
 package ru.jetlabs.ts.authprovider.v1.api;
 
+import feign.FeignException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,17 +31,21 @@ public class LoginControllerV1 implements LoginContractV1 {
     @Override
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        ResponseEntity<UserResponseForm> response =
-                userServiceClient.getByEmailAndPassword(new UserFindForm(loginRequest.email()
-                ,loginRequest.password()));
-        if (response.getStatusCode().is2xxSuccessful()){
-            return ResponseEntity.ok(new TokenResponse(
-                    jwtService.generateToken(Objects.requireNonNull(response.getBody()).id()),
-                    response.getBody().id(),
-                    response.getBody().emailVerified()
-            ));
-        } else {
-            return response;
+        try {
+            ResponseEntity<UserResponseForm> response =
+                    userServiceClient.getByEmailAndPassword(new UserFindForm(loginRequest.email()
+                            ,loginRequest.password()));
+            if (response.getStatusCode().is2xxSuccessful()){
+                return ResponseEntity.ok(new TokenResponse(
+                        jwtService.generateToken(Objects.requireNonNull(response.getBody()).id()),
+                        response.getBody().id(),
+                        response.getBody().emailVerified()
+                ));
+            } else {
+                return response;
+            }
+        }catch (FeignException e){
+            return ResponseEntity.notFound().build();
         }
     }
 }
