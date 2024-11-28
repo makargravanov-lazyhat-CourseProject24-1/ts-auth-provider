@@ -1,5 +1,6 @@
 package ru.jetlabs.ts.authprovider.v1.api;
 
+import feign.FeignException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -39,15 +40,23 @@ public class ValidateTokenControllerV1 implements ValidateTokenContractV1 {
         }
 
         if(tokenRequest.needEmailConfirm()){
+            try {
             ResponseEntity<UserResponseForm> response =
                     userServiceClient.getById(id);
-            if (response.getStatusCode().is2xxSuccessful()){
-                return ResponseEntity.ok(new TokenResponse(
-                        jwtService.generateToken(Objects.requireNonNull(response.getBody()).id()),
-                        response.getBody().id(),
-                        response.getBody().emailVerified()
-                ));
-            } else {
+
+                if (response.getStatusCode().is2xxSuccessful()){
+                    return ResponseEntity.ok(new TokenResponse(
+                            jwtService.generateToken(Objects.requireNonNull(response.getBody()).id()),
+                            response.getBody().id(),
+                            response.getBody().emailVerified()
+                    ));
+                } else {
+                    return ResponseEntity.status(403).body("Unauthorized");
+                }
+            }catch (FeignException e){
+                if(e.status()==500){
+                    return ResponseEntity.status(500).body("Internal error in ts-user-service");
+                }
                 return ResponseEntity.status(403).body("Unauthorized");
             }
         }else {
