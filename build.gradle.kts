@@ -20,10 +20,10 @@ dependencies {
     implementation(libs.lombok)
     implementation(libs.spring.boot.security)
     implementation(libs.spring.boot.securityTest)
-    implementation(libs.jjwt)
-    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
-    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
+    implementation(libs.spring.cloud.openfeign)
+    implementation(libs.jjwt.api)
+    runtimeOnly(libs.jjwt.impl)
+    runtimeOnly(libs.jjwt.jackson)
 }
 
 java {
@@ -34,6 +34,6 @@ java {
 
 dependencyManagement {
     imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
+        mavenBom(libs.bom.spring.cloud.dependencies.get().toString())
     }
 }

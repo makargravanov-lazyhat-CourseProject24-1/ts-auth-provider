@@ -12,6 +12,7 @@ kotlinx-serializationJson = "1.7.3"
 kotlinx-coroutines = "1.9.0"
 kotlinx-collectionsImmutable = "0.3.8"
 
+spring-cloud = "2024.0.0-RC1"
 spring-boot = "3.4.0"
 spring-dependencyManagement = "1.1.6"
 
@@ -26,6 +27,10 @@ kotlinx-collectionsImmutable = { group = "org.jetbrains.kotlinx", name = "kotlin
 
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
 
+bom-spring-cloud-dependencies = {module = "org.springframework.cloud:spring-cloud-dependencies", version.ref = "spring-cloud"}
+
+spring-cloud-openfeign = {module = "org.springframework.cloud:spring-cloud-starter-openfeign"}
+
 spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter" }
 
 spring-boot-webMVC = { module = "org.springframework.boot:spring-boot-starter-web" }
@@ -38,6 +43,8 @@ exposed-JDBC = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "e
 
 lombok = { module = "org.projectlombok:lombok" }
 
-jjwt = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
+jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
+jjwt-impl = {module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt"}
+jjwt-jackson = {module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt"}
 
 postgresqlDriver = { module = "org.postgresql:postgresql" }
