@@ -4,11 +4,9 @@ plugins {
     alias(libs.plugins.spring.boot)
     alias(libs.plugins.spring.dependencyManagement)
 }
-val springCloudVersion by extra("2024.0.0-RC1")
 
 repositories {
     mavenCentral()
-    maven("https://repo.spring.io/milestone/")
 }
 
 group = "ru.jetlabs"
