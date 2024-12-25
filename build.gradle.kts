@@ -1,8 +1,12 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.spring.kotlin)
-    alias(libs.plugins.spring.boot)
-    alias(libs.plugins.spring.dependencyManagement)
+    val kotlin = "2.1.0"
+    val springBoot = "3.4.0"
+    val springDependencyManagement = "1.1.6"
+
+    kotlin("jvm") version kotlin
+    kotlin("plugin.spring") version kotlin
+    id("org.springframework.boot") version springBoot
+    id("io.spring.dependency-management") version springDependencyManagement
 }
 
 repositories {
@@ -12,16 +16,17 @@ repositories {
 group = "ru.jetlabs"
 
 dependencies {
-    implementation(libs.spring.boot.starter)
-    implementation(libs.spring.boot.webMVC)
-    implementation(libs.kotlin.reflect)
-    implementation(libs.lombok)
-    implementation(libs.spring.boot.security)
-    implementation(libs.spring.boot.securityTest)
-    implementation(libs.spring.cloud.openfeign)
-    implementation(libs.jjwt.api)
-    runtimeOnly(libs.jjwt.impl)
-    runtimeOnly(libs.jjwt.jackson)
+    val jjwt = "0.11.5"
+
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.projectlombok:lombok")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+    implementation("io.jsonwebtoken:jjwt-api:$jjwt")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwt")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwt")
 }
 
 java {
@@ -31,7 +36,9 @@ java {
 }
 
 dependencyManagement {
+    val springCloud = "2024.0.0"
+
     imports {
-        mavenBom(libs.bom.spring.cloud.dependencies.get().toString())
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloud")
     }
 }
